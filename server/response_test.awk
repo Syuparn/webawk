@@ -60,6 +60,7 @@ function test_respond_with_body(    tests) {
         "Connection: keep-alive\r\n"\
         "Content-Length: 15\r\n"\
         "Content-Type: application/json\r\n"\
+        "\r\n"\
         "{\"name\":\"Taro\"}"
 
     for (i in tests) {

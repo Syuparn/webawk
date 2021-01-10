@@ -28,6 +28,7 @@ function test_response_lines(    tests) {
         "HTTP/1.1 200 OK\r\n"\
         "Content-Length: 16\r\n"\
         "Content-Type: application/json\r\n"\
+        "\r\n"\
         "{\"name\": \"Taro\"}"
 
     for (i in tests) {
