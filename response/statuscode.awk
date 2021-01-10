@@ -1,0 +1,65 @@
+@namespace "response"
+
+BEGIN {
+    _STATUS_TEXTS[100] = "Continue"
+    _STATUS_TEXTS[101] = "Switching Protocol"
+    _STATUS_TEXTS[103] = "Early Hints"
+
+    _STATUS_TEXTS[200] = "OK"
+    _STATUS_TEXTS[201] = "Created"
+    _STATUS_TEXTS[202] = "Accepted"
+    _STATUS_TEXTS[203] = "Non-Authoritative Information"
+    _STATUS_TEXTS[204] = "No Content"
+    _STATUS_TEXTS[205] = "Reset Content"
+    _STATUS_TEXTS[206] = "Partial Content"
+
+    _STATUS_TEXTS[300] = "Multiple Choices"
+    _STATUS_TEXTS[301] = "Moved Permanently"
+    _STATUS_TEXTS[302] = "Found"
+    _STATUS_TEXTS[303] = "See Other"
+    _STATUS_TEXTS[304] = "Not Modified"
+    _STATUS_TEXTS[307] = "Temporary Redirect"
+    _STATUS_TEXTS[308] = "Permanent Redirect"
+
+    _STATUS_TEXTS[400] = "Bad Request"
+    _STATUS_TEXTS[401] = "Unauthorized"
+    _STATUS_TEXTS[402] = "Payment Required"
+    _STATUS_TEXTS[403] = "Forbidden"
+    _STATUS_TEXTS[404] = "Not Found"
+    _STATUS_TEXTS[405] = "Method Not Allowed"
+    _STATUS_TEXTS[406] = "Not Acceptable"
+    _STATUS_TEXTS[407] = "Proxy Authentication Required"
+    _STATUS_TEXTS[408] = "Request Timeout"
+    _STATUS_TEXTS[409] = "Conflict"
+    _STATUS_TEXTS[410] = "Gone"
+    _STATUS_TEXTS[411] = "Length Required"
+    _STATUS_TEXTS[412] = "Precondition Failed"
+    _STATUS_TEXTS[413] = "Payload Too Large"
+    _STATUS_TEXTS[414] = "URI Too Long"
+    _STATUS_TEXTS[415] = "Unsupported Media Type"
+    _STATUS_TEXTS[416] = "Range Not Satisfiable"
+    _STATUS_TEXTS[417] = "Expectation Failed"
+    _STATUS_TEXTS[418] = "I'm a teapot"
+    _STATUS_TEXTS[421] = "Misdirected Request"
+    _STATUS_TEXTS[425] = "Too Early"
+    _STATUS_TEXTS[426] = "Upgrade Required"
+    _STATUS_TEXTS[428] = "Precondition Required"
+    _STATUS_TEXTS[429] = "Too Many Requests"
+    _STATUS_TEXTS[431] = "Request Header Fields Too Large"
+    _STATUS_TEXTS[451] = "Unavailable For Legal Reasons"
+
+    _STATUS_TEXTS[500] = "Internal Server Error"
+    _STATUS_TEXTS[501] = "Not Implemented"
+    _STATUS_TEXTS[502] = "Bad Gateway"
+    _STATUS_TEXTS[503] = "Service Unavailable"
+    _STATUS_TEXTS[504] = "Gateway Timeout"
+    _STATUS_TEXTS[505] = "HTTP Version Not Supported"
+    _STATUS_TEXTS[506] = "Variant Also Negotiates"
+    _STATUS_TEXTS[510] = "Not Extended"
+    _STATUS_TEXTS[511] = "Network Authentication Required"
+}
+
+function status_text(status_code) {
+    return _STATUS_TEXTS[status_code]
+}
+
