@@ -47,6 +47,11 @@ BEGIN {
         print err
         exit 1
     }
+    err = test_find_body()
+    if (err) {
+        print err
+        exit 1
+    }
 
     print "passed"
 }
@@ -475,6 +480,51 @@ function _test_find_query(tc,     actual, i){
             return sprintf("%s: queries[%d] must be '%s'. got='%s'",
                 log_prefix, i, tc["expected"][i], actual[i])
         }
+    }
+
+    return ""
+}
+
+function test_find_body(    tests, err) {
+    tests[1]["title"]    = "found"
+    tests[1]["body"]     = "{\"name\":\"Taro\"}"
+    tests[1]["query"]    = ".name"
+    tests[1]["expected"] = "Taro"
+
+    tests[2]["title"]    = "not found"
+    tests[2]["body"]     = "{\"name\":\"Taro\"}"
+    tests[2]["query"]    = ".age"
+    tests[2]["expected"] = ""
+
+    tests[3]["title"]    = "numeric element"
+    tests[3]["body"]     = "{\"age\":20}"
+    tests[3]["query"]    = ".age"
+    tests[3]["expected"] = "20"
+
+    tests[4]["title"]    = "syntax error"
+    tests[4]["body"]     = "{\"age\":20"
+    tests[4]["query"]    = ".age"
+    tests[4]["expected"] = ""
+
+    for (i in tests) {
+        REQUEST_BODY = tests[i]["body"]
+
+        err = _test_find_body(tests[i])
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_find_body: " err
+        }
+    }
+}
+
+function _test_find_body(tc,    log_prefix, actual) {
+    log_prefix = sprintf("case '%s'", tc["title"])
+    actual = server::find_body(tc["query"])
+
+    if (actual != tc["expected"]) {
+        return sprintf("%s: result must be '%s'. got='%s'",
+            log_prefix, tc["expected"], actual)
     }
 
     return ""

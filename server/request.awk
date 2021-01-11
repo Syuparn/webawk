@@ -1,5 +1,6 @@
 @namespace "server"
 
+@include "json/jq.awk"
 @include "request/pathparam.awk"
 @include "request/request.awk"
 @include "server/globalvars.awk"
@@ -84,4 +85,19 @@ function find_query(key, queries) {
     for (i in awk::REQUEST_QUERIES[key]) {
         queries[i] = awk::REQUEST_QUERIES[key][i]
     }
+}
+
+function find_body(query,    result) {
+    result = json::jq(awk::REQUEST_BODY, query)
+    if (result == "null") {
+        return ""
+    }
+    return _unquote_doublequotes(result)
+}
+
+function _unquote_doublequotes(s) {
+    if (match(s, "^\".*\"$")) {
+        return substr(s, 2, length(s) - 2)
+    }
+    return s
 }

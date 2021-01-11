@@ -57,6 +57,12 @@ function query(key, queries) {
     return server::find_query(key, queries)
 }
 
+# find element from received request body
+# NOTE: query must be jq-style (this internally used jq)
+function body(query) {
+    return server::find_body(query)
+}
+
 # send back response
 function res(statuscode, v,   res_str) {
     res_str = server::respond(statuscode, v)
