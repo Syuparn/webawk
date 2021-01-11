@@ -48,6 +48,15 @@ function path(key) {
     return server::find_pathparam(key)
 }
 
+# only 1st arg: check if the URL contains query key
+# with 2nd arg: assign all queries from the URL to "queries"
+function query(key, queries) {
+    if (!queries) {
+        return server::got_query(key)
+    }
+    # TODO: 2nd arg
+}
+
 # send back response
 function res(statuscode, v,   res_str) {
     res_str = server::respond(statuscode, v)
@@ -55,7 +64,7 @@ function res(statuscode, v,   res_str) {
     close(http_service())
 }
 
-function error_res(    body) {
+function default_res(    body) {
     body["error"] = "Oops! Any of patterns did not match to the request."
-    res(500, body)
+    res(404, body)
 }

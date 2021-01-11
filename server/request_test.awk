@@ -42,6 +42,11 @@ BEGIN {
         print err
         exit 1
     }
+    err = test_find_query()
+    if (err) {
+        print err
+        exit 1
+    }
 
     print "passed"
 }
