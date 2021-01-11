@@ -43,6 +43,26 @@ function load_req() {
     server::load_request(http_service())
 }
 
+# find pathparam from received URL
+function path(key) {
+    return server::find_pathparam(key)
+}
+
+# only 1st arg: check if the URL contains query key
+# with 2nd arg: assign all queries from the URL to "queries"
+function query(key, queries) {
+    if (!queries) {
+        return server::got_query(key)
+    }
+    return server::find_query(key, queries)
+}
+
+# find element from received request body
+# NOTE: query must be jq-style (this internally used jq)
+function body(query) {
+    return server::find_body(query)
+}
+
 # send back response
 function res(statuscode, v,   res_str) {
     res_str = server::respond(statuscode, v)
@@ -50,7 +70,7 @@ function res(statuscode, v,   res_str) {
     close(http_service())
 }
 
-function error_res(    body) {
+function default_res(    body) {
     body["error"] = "Oops! Any of patterns did not match to the request."
-    res(500, body)
+    res(404, body)
 }

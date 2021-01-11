@@ -1,5 +1,6 @@
 @namespace "server"
 
+@include "json/jq.awk"
 @include "request/pathparam.awk"
 @include "request/request.awk"
 @include "server/globalvars.awk"
@@ -64,4 +65,39 @@ function got_query(key, value,    ok) {
     }
 
     return 0
+}
+
+function find_pathparam(key) {
+    # NOTE: if key is referred directly, empty value is assigned implicitly
+    if (key in awk::REQUEST_PATHPARAMS) {
+        return awk::REQUEST_PATHPARAMS[key]
+    }
+    return ""
+}
+
+function find_query(key, queries) {
+    # init queries
+    delete queries
+
+    if (!(key in awk::REQUEST_QUERIES)) {
+        return
+    }
+    for (i in awk::REQUEST_QUERIES[key]) {
+        queries[i] = awk::REQUEST_QUERIES[key][i]
+    }
+}
+
+function find_body(query,    result) {
+    result = json::jq(awk::REQUEST_BODY, query)
+    if (result == "null") {
+        return ""
+    }
+    return _unquote_doublequotes(result)
+}
+
+function _unquote_doublequotes(s) {
+    if (match(s, "^\".*\"$")) {
+        return substr(s, 2, length(s) - 2)
+    }
+    return s
 }
