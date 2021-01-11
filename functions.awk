@@ -49,11 +49,13 @@ function path(key) {
 }
 
 # only 1st arg: check if the URL contains query key
-# with 2nd arg: assign all queries from the URL to "queries"
-function query(key, queries) {
-    if (!queries) {
-        return server::got_query(key)
-    }
+# with 2nd arg: check if any of query 'key' has value 'value'
+function query(key, value) {
+    return server::got_query(key, value)
+}
+
+# assign all queries from the URL to "queries"
+function getquery(key, queries) {
     return server::find_query(key, queries)
 }
 
