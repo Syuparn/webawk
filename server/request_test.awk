@@ -51,7 +51,7 @@ BEGIN {
     print "passed"
 }
 
-function test_load_request(    tests) {
+function test_load_request(    tests, f, err) {
     tests[1]["title"]                                 = "request with body"
     tests[1]["fixturename"]                           = "request_with_body.txt"
     tests[1]["expected"]["version"]                   = "HTTP/1.1"
@@ -175,7 +175,7 @@ function _test_queries(tc, f, actual){
     return ""
 }
 
-function test_got_request(    tests) {
+function test_got_request(    tests, err) {
     tests[1]["title"]    = "matched"
     tests[1]["method"]   = "GET"
     tests[1]["path"]     = "/names"
@@ -196,7 +196,7 @@ function test_got_request(    tests) {
         REQUEST_PATH = "/names"
         HTTP_METHOD  = "GET"
 
-        err = _test_got_request(tests[i], f)
+        err = _test_got_request(tests[i])
         # NOTE: global variables must be reset
         test::reset_globals()
         if (err) {
@@ -217,7 +217,7 @@ function _test_got_request(tc,    log_prefix, actual) {
     return ""
 }
 
-function test_got_request_pathparam(    tests) {
+function test_got_request_pathparam(    tests, err) {
     tests[1]["title"]                   = "no pathparam"
     tests[1]["method"]                  = "GET"
     tests[1]["path"]                    = "/names"
@@ -248,7 +248,7 @@ function test_got_request_pathparam(    tests) {
         REQUEST_PATH = tests[i]["path"]
         HTTP_METHOD  = tests[i]["method"]
 
-        err = _test_got_request_pathparam(tests[i], f)
+        err = _test_got_request_pathparam(tests[i])
         # NOTE: global variables must be reset
         test::reset_globals()
         if (err) {
@@ -279,7 +279,7 @@ function _test_got_request_pathparam(tc,    log_prefix, actual) {
     return ""
 }
 
-function test_got_request_already_responded(    tests) {
+function test_got_request_already_responded(    tests, err) {
     tests[1]["title"]     = "if responded, no more requests are matched"
     tests[1]["responded"] = 1
     tests[1]["expected"]  = 0
@@ -294,7 +294,7 @@ function test_got_request_already_responded(    tests) {
         HTTP_METHOD  = "GET"
         _RESPONDED = tests[i]["responded"]
 
-        err = _test_got_request_already_responded(tests[i], f)
+        err = _test_got_request_already_responded(tests[i])
         # NOTE: global variables must be reset
         test::reset_globals()
         if (err) {
@@ -315,7 +315,7 @@ function _test_got_request_already_responded(tc,    log_prefix, actual) {
     return ""
 }
 
-function test_got_query(    tests) {
+function test_got_query(    tests, err) {
     tests[1]["title"]    = "matched"
     tests[1]["key"]      = "tag"
     tests[1]["value"]    = "awk"
@@ -336,7 +336,7 @@ function test_got_query(    tests) {
         REQUEST_QUERIES["tag"][1] = "web"
         REQUEST_QUERIES["tag"][2] = "awk"
 
-        err = _test_got_query(tests[i], f)
+        err = _test_got_query(tests[i])
         # NOTE: global variables must be reset
         test::reset_globals()
         if (err) {
@@ -357,7 +357,7 @@ function _test_got_query(tc,    log_prefix, actual) {
     return ""
 }
 
-function test_got_query_only_1st_arg(    tests) {
+function test_got_query_only_1st_arg(    tests, err) {
     tests[1]["title"]    = "key found"
     tests[1]["key"]      = "tag"
     tests[1]["expected"] = 1
@@ -392,13 +392,13 @@ function _test_got_query_only_1st_arg(tc,    log_prefix, actual) {
     return ""
 }
 
-function test_find_pathparam_found(    tests) {
+function test_find_pathparam_found(    tests, err) {
     tests[1]["title"]    = "found"
     tests[1]["key"]      = "name"
     tests[1]["expected"] = "taro"
 
     for (i in tests) {
-        # got queries
+        # got pathparams
         REQUEST_PATHPARAMS["name"] = "taro"
 
         err = _test_find_pathparam(tests[i], f)
@@ -410,13 +410,13 @@ function test_find_pathparam_found(    tests) {
     }
 }
 
-function test_find_pathparam_not_found(    tests) {
+function test_find_pathparam_not_found(    tests, err) {
     tests[1]["title"]    = "not found"
     tests[1]["key"]      = "name"
     tests[1]["expected"] = ""
 
     for (i in tests) {
-        err = _test_find_pathparam(tests[i], f)
+        err = _test_find_pathparam(tests[i])
         # NOTE: global variables must be reset
         test::reset_globals()
         if (err) {
@@ -432,6 +432,49 @@ function _test_find_pathparam(tc,    log_prefix, actual) {
     if (actual != tc["expected"]) {
         return sprintf("%s: result must be '%s'. got='%s'",
             log_prefix, tc["expected"], actual)
+    }
+
+    return ""
+}
+
+function test_find_query(    tests, err) {
+    tests[1]["title"]       = "found"
+    tests[1]["key"]         = "tag"
+    tests[1]["expected"][1] = "web"
+    tests[1]["expected"][2] = "awk"
+
+    tests[2]["title"]       = "not found"
+    tests[2]["key"]         = "limit"
+    tests[2]["expected"][""] = ""
+    delete tests[2]["expected"][""]
+
+    for (i in tests) {
+        REQUEST_QUERIES["tag"][1] = "web"
+        REQUEST_QUERIES["tag"][2] = "awk"
+
+        err = _test_find_query(tests[i])
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_find_query: " err
+        }
+    }
+}
+
+function _test_find_query(tc,     actual, i){
+    log_prefix = sprintf("case '%s'", tc["title"])
+    server::find_query(tc["key"], actual)
+
+    if (length(actual) != length(tc["expected"])) {
+        return sprintf("%s: queries length must be %d. got=%d",
+            log_prefix, length(tc["expected"]), length(actual))
+    }
+
+    for (i = 1; i <= length(tc["expected"]); i++) {
+        if (actual[i] != tc["expected"][i]) {
+            return sprintf("%s: queries[%d] must be '%s'. got='%s'",
+                log_prefix, i, tc["expected"][i], actual[i])
+        }
     }
 
     return ""

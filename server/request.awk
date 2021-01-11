@@ -73,3 +73,15 @@ function find_pathparam(key) {
     }
     return ""
 }
+
+function find_query(key, queries) {
+    # init queries
+    delete queries
+
+    if (!(key in awk::REQUEST_QUERIES)) {
+        return
+    }
+    for (i in awk::REQUEST_QUERIES[key]) {
+        queries[i] = awk::REQUEST_QUERIES[key][i]
+    }
+}

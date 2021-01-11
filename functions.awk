@@ -54,7 +54,7 @@ function query(key, queries) {
     if (!queries) {
         return server::got_query(key)
     }
-    # TODO: 2nd arg
+    return server::find_query(key, queries)
 }
 
 # send back response
