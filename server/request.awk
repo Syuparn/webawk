@@ -65,3 +65,11 @@ function got_query(key, value,    ok) {
 
     return 0
 }
+
+function find_pathparam(key) {
+    # NOTE: if key is referred directly, empty value is assigned implicitly
+    if (key in awk::REQUEST_PATHPARAMS) {
+        return awk::REQUEST_PATHPARAMS[key]
+    }
+    return ""
+}

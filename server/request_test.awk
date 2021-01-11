@@ -32,7 +32,16 @@ BEGIN {
         print err
         exit 1
     }
-
+    err = test_find_pathparam_found()
+    if (err) {
+        print err
+        exit 1
+    }
+    err = test_find_pathparam_not_found()
+    if (err) {
+        print err
+        exit 1
+    }
 
     print "passed"
 }
@@ -369,6 +378,51 @@ function test_got_query_only_1st_arg(    tests) {
 function _test_got_query_only_1st_arg(tc,    log_prefix, actual) {
     log_prefix = sprintf("case '%s'", tc["title"])
     actual = server::got_query(tc["key"])
+
+    if (actual != tc["expected"]) {
+        return sprintf("%s: result must be '%s'. got='%s'",
+            log_prefix, tc["expected"], actual)
+    }
+
+    return ""
+}
+
+function test_find_pathparam_found(    tests) {
+    tests[1]["title"]    = "found"
+    tests[1]["key"]      = "name"
+    tests[1]["expected"] = "taro"
+
+    for (i in tests) {
+        # got queries
+        REQUEST_PATHPARAMS["name"] = "taro"
+
+        err = _test_find_pathparam(tests[i], f)
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_find_pathparam_found: " err
+        }
+    }
+}
+
+function test_find_pathparam_not_found(    tests) {
+    tests[1]["title"]    = "not found"
+    tests[1]["key"]      = "name"
+    tests[1]["expected"] = ""
+
+    for (i in tests) {
+        err = _test_find_pathparam(tests[i], f)
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_find_pathparam_not_found: " err
+        }
+    }
+}
+
+function _test_find_pathparam(tc,    log_prefix, actual) {
+    log_prefix = sprintf("case '%s'", tc["title"])
+    actual = server::find_pathparam(tc["key"])
 
     if (actual != tc["expected"]) {
         return sprintf("%s: result must be '%s'. got='%s'",

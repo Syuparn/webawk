@@ -43,6 +43,11 @@ function load_req() {
     server::load_request(http_service())
 }
 
+# find pathparam from received URL
+function path(key) {
+    return server::find_pathparam(key)
+}
+
 # send back response
 function res(statuscode, v,   res_str) {
     res_str = server::respond(statuscode, v)
