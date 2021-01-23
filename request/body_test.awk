@@ -38,6 +38,12 @@ function test_parse_body(    tests, f) {
     tests[3]["content_type"] = "text/plain"
     tests[3]["expected"]     = "this is awk "
 
+    # if '}' is not removed(a trailing space is removed instead), do nothing
+    tests[4]["title"]        = "json request body with a trailing space"
+    tests[4]["body"]         = "{\"name\": \"awk\"} "
+    tests[4]["content_type"] = "application/json"
+    tests[4]["expected"]     = "{\"name\": \"awk\"} "
+
     for (i in tests) {
         f = test::string_to_stdin(tests[i]["body"])
 
