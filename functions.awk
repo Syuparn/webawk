@@ -68,7 +68,8 @@ function body(query) {
 # send back response
 function res(statuscode, v,   res_str) {
     res_str = server::respond(statuscode, v)
-    print res_str |& http_service()
+    # NOTE: use printf not to add trailing \n
+    printf res_str |& http_service()
     close(http_service())
 }
 
