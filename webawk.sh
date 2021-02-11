@@ -3,8 +3,9 @@
 print_help() {
     echo "-f progfile : run program file instead of program string"
     echo "-h          : get help"
-    echo "-n          : how many requests it can handle (default: 1000)"
+    echo "-n          : how many requests it can handle (default: 2147483647)"
     echo "-p port     : port to listen (default: 8080)"
+    echo "-c command  : which awk command to run (default: gawk)"
     echo ""
     print_example
 }
@@ -17,10 +18,12 @@ print_example() {
 # default port
 PORT=8080
 # default numbers of requests it can handle before finishing
-REQUEST_LIMIT=1000
+REQUEST_LIMIT=2147483647
+# default awk command
+AWK_COMMAND=gawk
 
 # NOTE: ':' after each character means the option requires argument
-while getopts :f:hn:p: OPT
+while getopts :f:hn:p:c: OPT
 do
     case $OPT in
         f)  FILENAME=$OPTARG
@@ -28,6 +31,8 @@ do
         n)  REQUEST_LIMIT=$OPTARG
             ;;
         p)  PORT=$OPTARG
+            ;;
+        c)  AWK_COMMAND=$OPTARG
             ;;
         h)  print_help
             exit 0
@@ -43,7 +48,7 @@ shift $((OPTIND - 1))
 # run program file
 if [ -n "$FILENAME" ]; then
     seq $REQUEST_LIMIT |\
-        gawk -v PORT="$PORT" "$(cat main.former.awk; cat $FILENAME; cat main.latter.awk)"
+        $AWK_COMMAND -v PORT="$PORT" "$(cat main.former.awk; cat $FILENAME; cat main.latter.awk)"
     exit 0
 fi
 
@@ -56,4 +61,4 @@ fi
 # run program string in command
 # NOTE: merge programs dynamically
 seq $REQUEST_LIMIT |\
-    gawk -v PORT="$PORT" "$(cat main.former.awk; echo $1; cat main.latter.awk)"
+    $AWK_COMMAND -v PORT="$PORT" "$(cat main.former.awk; echo $1; cat main.latter.awk)"
