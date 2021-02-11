@@ -41,6 +41,10 @@ function test_parse_headers(    tests, f) {
     tests[4]["expected"][""] = ""
     delete tests[4]["expected"][""]
 
+    tests[5]["title"] = "without space after :"
+    tests[5]["fixturename"] = "header_without_space.txt"
+    tests[5]["expected"]["Host"] = "localhost:8080"
+
     for (i in tests) {
         f = test::setup_fixture(tests[i]["fixturename"])
 
