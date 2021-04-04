@@ -27,7 +27,7 @@ $ curl localhost:8080/names
 Or you can run webawk docker image.
 
 ```bash
-$ docker pull ghcr.io/syuparn/webawk:latest
+$ docker pull ghcr.io/syuparn/webawk:0.1.0
 ```
 
 # Usage
