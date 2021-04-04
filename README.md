@@ -22,6 +22,14 @@ $ curl localhost:8080/names
 - jq
     - because I have not written a JSON parser yet :smirk:
 
+# Image
+
+Or you can run webawk docker image.
+
+```bash
+$ docker pull ghcr.io/syuparn/webawk:latest
+```
+
 # Usage
 
 See `./examples` for practical examples.
