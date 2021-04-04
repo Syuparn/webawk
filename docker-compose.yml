@@ -1,7 +1,7 @@
 version: '3'
 services:
   webawk:
-    build: .
+    image: ghcr.io/syuparn/webawk:0.1.0
     tty: true
     ports:
       - 8080:8080
