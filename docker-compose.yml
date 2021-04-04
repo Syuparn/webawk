@@ -1,0 +1,8 @@
+version: '3'
+services:
+  webawk:
+    build: .
+    tty: true
+    ports:
+      - 8080:8080
+    command: ./webawk.sh -f example/multiple.awk -p 8080
