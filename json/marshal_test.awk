@@ -86,6 +86,10 @@ function test_marshal(    tests,    splitted) {
     tests[13]["input"] = splitted[1] # strnum "5"
     tests[13]["expected"] = "\"5\""
 
+    tests[14]["title"]    = "string with double quotations"
+    tests[14]["input"]    = "quote\"quote"
+    tests[14]["expected"] = "\"quote\\\"quote\""
+
     for (i in tests) {
         err = _test_marshal(tests[i])
         if (err) {
