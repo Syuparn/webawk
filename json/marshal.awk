@@ -4,7 +4,7 @@ function marshal(v) {
     if (awk::typeof(v) == "number") {
         return v
     }
-    if (awk::typeof(v) == "string") {
+    if (awk::typeof(v) == "string" || awk::typeof(v) == "strnum") {
         return sprintf("\"%s\"", v)
     }
     if (awk::typeof(v) == "array") {
