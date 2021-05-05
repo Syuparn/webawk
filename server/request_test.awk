@@ -32,6 +32,11 @@ BEGIN {
         print err
         exit 1
     }
+    err = test_got_query_number_key_value()
+    if (err) {
+        print err
+        exit 1
+    }
     err = test_find_pathparam_found()
     if (err) {
         print err
@@ -397,6 +402,31 @@ function _test_got_query_only_1st_arg(tc,    log_prefix, actual) {
     return ""
 }
 
+function test_got_query_number_key_value(    tests, err) {
+    tests[1]["title"]    = "number key"
+    tests[1]["key"]      = "4"
+    tests[1]["value"]    = "four"
+    tests[1]["expected"] = 1
+
+    tests[2]["title"]    = "number value"
+    tests[2]["key"]      = "five"
+    tests[2]["value"]    = "5"
+    tests[2]["expected"] = 1
+
+    for (i in tests) {
+        # got queries
+        REQUEST_QUERIES["4"][1] = "four"
+        REQUEST_QUERIES["five"][1] = "5"
+
+        err = _test_got_query(tests[i])
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_got_query_number_key_value: " err
+        }
+    }
+}
+
 function test_find_pathparam_found(    tests, err) {
     tests[1]["title"]    = "found"
     tests[1]["key"]      = "name"
@@ -501,6 +531,7 @@ function test_find_body(    tests, err) {
     tests[3]["query"]    = ".age"
     tests[3]["expected"] = "20"
 
+    printf "parse error below is intentional! don't worry :)\n"
     tests[4]["title"]    = "syntax error"
     tests[4]["body"]     = "{\"age\":20"
     tests[4]["query"]    = ".age"
