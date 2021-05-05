@@ -10,7 +10,7 @@ BEGIN {
     print "passed"
 }
 
-function test_marshal(    tests) {
+function test_marshal(    tests,    splitted) {
     tests[1]["title"]    = "number"
     tests[1]["input"]    = 1
     tests[1]["expected"] = "1"
@@ -66,6 +66,29 @@ function test_marshal(    tests) {
     tests[10]["input"]["b"]["A"] = "bA"
     tests[10]["input"]["b"]["B"] = "bB"
     tests[10]["expected"] = "{\"a\":{\"A\":\"aA\",\"B\":\"aB\"},\"b\":{\"A\":\"bA\",\"B\":\"bB\"}}"
+
+    tests[11]["title"]    = "array of numbers"
+    tests[11]["input"][1] = 10
+    tests[11]["input"][2] = 20
+    tests[11]["expected"] = "[10,20]"
+
+    tests[12]["title"]    = "array of multiple types"
+    tests[12]["input"][1] = "ten"
+    tests[12]["input"][2] = 20
+    tests[12]["input"][3] = "30"
+    tests[12]["expected"] = "[\"ten\",20,\"30\"]"
+
+    # NOTE: in awk, non-intialized number-like string is treated as strnum type
+    #       (neither number nor string!)
+    tests[13]["title"]    = "strnum type"
+    # create strnum by splitting string
+    split("5", splitted)
+    tests[13]["input"] = splitted[1] # strnum "5"
+    tests[13]["expected"] = "\"5\""
+
+    tests[14]["title"]    = "string with double quotations"
+    tests[14]["input"]    = "quote\"quote"
+    tests[14]["expected"] = "\"quote\\\"quote\""
 
     for (i in tests) {
         err = _test_marshal(tests[i])

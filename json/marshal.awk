@@ -4,8 +4,8 @@ function marshal(v) {
     if (awk::typeof(v) == "number") {
         return v
     }
-    if (awk::typeof(v) == "string") {
-        return sprintf("\"%s\"", v)
+    if (awk::typeof(v) == "string" || awk::typeof(v) == "strnum") {
+        return _marshal_string(v)
     }
     if (awk::typeof(v) == "array") {
         if (is_numeric_array(v)) {
@@ -14,6 +14,13 @@ function marshal(v) {
             return _marshal_associative_array(v)
         }
     }
+}
+
+function _marshal_string(v,    escaped) {
+    escaped = v
+    # escape double quotations in string
+    gsub("\"", "\\\"", escaped)
+    return sprintf("\"%s\"", escaped)
 }
 
 function _marshal_associative_array(v,    i, len, sorted, pair, json) {

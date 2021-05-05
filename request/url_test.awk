@@ -38,6 +38,22 @@ function test_parse_queries(    tests, i) {
     tests[4]["expected"]["tag"][1]   = "awk"
     tests[4]["expected"]["tag"][2]   = "web"
 
+    tests[5]["title"]                = "url with a numeric query"
+    tests[5]["url"]                  = "/articles?num=1"
+    tests[5]["expected"]["num"][1]   = "1"
+
+    tests[6]["title"]                = "url with a query containing an encoded space"
+    tests[6]["url"]                  = "/articles?name=foo+bar"
+    tests[6]["expected"]["name"][1]  = "foo bar"
+
+    tests[7]["title"]                = "url with a query containing persent-encoded characters"
+    tests[7]["url"]                  = "/articles?face=%28%2A_%2a%29"
+    tests[7]["expected"]["face"][1]   = "(*_*)"
+
+    tests[8]["title"]                = "url with a query containing percent-encoded '+'"
+    tests[8]["url"]                  = "/articles?plus=%2B"
+    tests[8]["expected"]["plus"][1]   = "+"
+
     for (i in tests) {
         err = _test_parse_queries(tests[i])
         if (err) {
