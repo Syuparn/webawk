@@ -1,4 +1,7 @@
 # webawk
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+[![Test](https://github.com/Syuparn/webawk/actions/workflows/test.yaml/badge.svg)](https://github.com/Syuparn/webawk/actions/workflows/test.yaml)
+
 simple (mock) web server framework written in awk
 
 # What's this?
