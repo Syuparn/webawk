@@ -4,7 +4,7 @@
 @include "response/response.awk"
 @include "server/globalvars.awk"
 
-function respond(statuscode, body,    headers, json_str) {
+function respond(statuscode, body, headers,    json_str) {
     headers["Connection"] = "keep-alive"
 
     json_str = json::marshal(body)
