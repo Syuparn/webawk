@@ -1,6 +1,7 @@
 @include "server/request.awk"
 @include "server/reset.awk"
 @include "server/response.awk"
+@include "util/time.awk"
 
 # return wether request method is POST with end-point path_template
 function POST(path_template) {
@@ -66,8 +67,10 @@ function body(query) {
 }
 
 # send back response
-function res(statuscode, v,   res_str) {
-    res_str = server::respond(statuscode, v)
+function res(statuscode, v, headers,   res_str) {
+    headers["Date"] = util::format_time(systime())
+
+    res_str = server::respond(statuscode, v, headers)
     # NOTE: use printf not to add trailing \n
     printf res_str |& http_service()
     close(http_service())
