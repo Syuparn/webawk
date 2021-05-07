@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # NOTE: this must be set, otherwise Date header might not be encoded in English
-export LC_ALL=c
+export LC_ALL=c 2>/dev/null
 
 print_help() {
     echo "-f progfile : run program file instead of program string"
