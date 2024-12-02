@@ -7,4 +7,5 @@ RUN apt update -y && \
 
 COPY . /webawk
 
-CMD [ "./webawk.sh", "-f", "example/simple.awk" ]
+ENTRYPOINT [ "./webawk.sh" ]
+CMD [ "-f", "example/simple.awk" ]

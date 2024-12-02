@@ -30,7 +30,7 @@ $ curl localhost:8080/names
 Or you can run webawk docker image.
 
 ```bash
-$ docker pull ghcr.io/syuparn/webawk:0.3.0
+$ docker run ghcr.io/syuparn/webawk:0.4.2 'GET("/names") { b["names"][1]="Taro"; res(200, b) }'
 ```
 
 See https://github.com/users/Syuparn/packages/container/package/webawk for detail.
