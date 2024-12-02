@@ -30,7 +30,7 @@ $ curl localhost:8080/names
 Or you can run webawk docker image.
 
 ```bash
-$ docker run ghcr.io/syuparn/webawk:0.4.2 'GET("/names") { b["names"][1]="Taro"; res(200, b) }'
+$ docker run -it -p 8080:8080 ghcr.io/syuparn/webawk:0.4.2 'GET("/names") { b["names"][1]="Taro"; res(200, b) }'
 ```
 
 See https://github.com/users/Syuparn/packages/container/package/webawk for detail.
@@ -39,6 +39,17 @@ See https://github.com/users/Syuparn/packages/container/package/webawk for detai
 
 See `./examples` for practical examples.
 You can also check command options by `./webawk.sh -h`.
+
+```
+-f progfile : run program file instead of program string
+-h          : get help
+-n          : how many requests it can handle (default: 2147483647)
+-p port     : port to listen (default: 8080)
+-c command  : which awk command to run (default: gawk)
+
+Example:
+  webawk.sh 'GET("/names") {b["names"][1]="Taro"; res(200, b)}'
+```
 
 # For developers
 
