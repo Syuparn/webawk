@@ -39,3 +39,10 @@ See https://github.com/users/Syuparn/packages/container/package/webawk for detai
 
 See `./examples` for practical examples.
 You can also check command options by `./webawk.sh -h`.
+
+# For developers
+
+```bash
+# test
+$ ./test.sh
+```

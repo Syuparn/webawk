@@ -60,6 +60,11 @@ function getquery(key, queries) {
     return server::find_query(key, queries)
 }
 
+# find header from received request headers
+function header(key) {
+    return server::find_header(key)
+}
+
 # find element from received request body
 # NOTE: query must be jq-style (this internally used jq)
 function body(query) {
