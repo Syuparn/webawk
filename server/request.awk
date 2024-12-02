@@ -87,6 +87,15 @@ function find_query(key, queries) {
     }
 }
 
+
+function find_header(key) {
+    # NOTE: if key is referred directly, empty value is assigned implicitly
+    if (key in awk::REQUEST_HEADERS) {
+        return awk::REQUEST_HEADERS[key]
+    }
+    return ""
+}
+
 function find_body(query,    result) {
     result = json::jq(awk::REQUEST_BODY, query)
     if (result == "null") {

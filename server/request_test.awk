@@ -52,6 +52,16 @@ BEGIN {
         print err
         exit 1
     }
+    err = test_find_header_found()
+    if (err) {
+        print err
+        exit 1
+    }
+    err = test_find_header_not_found()
+    if (err) {
+        print err
+        exit 1
+    }
     err = test_find_body()
     if (err) {
         print err
@@ -510,6 +520,51 @@ function _test_find_query(tc,     actual, i){
             return sprintf("%s: queries[%d] must be '%s'. got='%s'",
                 log_prefix, i, tc["expected"][i], actual[i])
         }
+    }
+
+    return ""
+}
+
+function test_find_header_found(    tests, err) {
+    tests[1]["title"]    = "found"
+    tests[1]["key"]      = "Content-Type"
+    tests[1]["expected"] = "application/json"
+
+    for (i in tests) {
+        # got pathparams
+        REQUEST_HEADERS["Content-Type"] = "application/json"
+
+        err = _test_find_header(tests[i], f)
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_find_header_found: " err
+        }
+    }
+}
+
+function test_find_header_not_found(    tests, err) {
+    tests[1]["title"]    = "not found"
+    tests[1]["key"]      = "name"
+    tests[1]["expected"] = ""
+
+    for (i in tests) {
+        err = _test_find_header(tests[i])
+        # NOTE: global variables must be reset
+        test::reset_globals()
+        if (err) {
+            return "test_find_header_not_found: " err
+        }
+    }
+}
+
+function _test_find_header(tc,    log_prefix, actual) {
+    log_prefix = sprintf("case '%s'", tc["title"])
+    actual = server::find_header(tc["key"])
+
+    if (actual != tc["expected"]) {
+        return sprintf("%s: result must be '%s'. got='%s'",
+            log_prefix, tc["expected"], actual)
     }
 
     return ""
